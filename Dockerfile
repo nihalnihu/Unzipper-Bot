@@ -2,7 +2,7 @@ FROM archlinux:latest
 
 RUN pacman -Syyu --noconfirm
 RUN pacman -S --noconfirm python-pip zstd p7zip gcc
-RUN pip3 install -U pip
+RUN pip3 install --upgrade pip
 RUN mkdir /app/
 WORKDIR /app/
 COPY . /app/
