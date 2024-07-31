@@ -1,10 +1,10 @@
 FROM archlinux:latest
 
 RUN pacman -Syyu --noconfirm \
-    && pacman -S --noconfirm python-venv zstd p7zip gcc \
+    && pacman -S --noconfirm python python-pip zstd p7zip gcc \
     && python -m venv /venv \
     && /venv/bin/pip install --upgrade pip
-
+    
 RUN mkdir /app/
 WORKDIR /app/
 COPY . /app/
