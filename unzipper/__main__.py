@@ -1,20 +1,21 @@
-# ===================================================================== #
-#                      Copyright (c) 2022 Itz-fork                      #
-#                                                                       #
-# This program is distributed in the hope that it will be useful,       #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of        #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                  #
-# See the GNU General Public License for more details.                  #
-#                                                                       #
-# You should have received a copy of the GNU General Public License     #
-# along with this program. If not, see <http://www.gnu.org/licenses/>   #
-# ===================================================================== #
-
 import logging
 from pyrogram import idle
 from os import makedirs, path
 from config import Config
+from flask import Flask, jsonify
 
+# Create a Flask application instance
+app = Flask(__name__)
+
+# Define a route for the Flask app
+@app.route('/')
+def home():
+    return jsonify({"message": "Flask server is running!"})
+
+# Define more routes if needed
+@app.route('/status')
+def status():
+    return jsonify({"status": "active"})
 
 if __name__ == "__main__":
     logging.info(" >> Checking download location...")
@@ -35,4 +36,14 @@ if __name__ == "__main__":
     check_log_channel()
 
     logging.info("Bot is active Now! Join @NexaBotsUpdates")
+
+    # Run Flask in a separate thread
+    from threading import Thread
+    def run_flask():
+        app.run(host='0.0.0.0', port=5000, debug=True)
+
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
+
+    # Start the Pyrogram client
     idle()
