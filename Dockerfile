@@ -1,11 +1,17 @@
 FROM archlinux:latest
 
-RUN pacman -Syyu --noconfirm
-RUN pacman -S --noconfirm python-pip zstd p7zip gcc
-RUN pip3 install --upgrade pip
+RUN pacman -Syyu --noconfirm \
+    && pacman -S --noconfirm python-venv zstd p7zip gcc \
+    && python -m venv /venv \
+    && /venv/bin/pip install --upgrade pip
+
 RUN mkdir /app/
 WORKDIR /app/
 COPY . /app/
-RUN pip3 install -U setuptools
-RUN pip3 install -U -r requirements.txt
-CMD bash start.sh
+
+# Activate the virtual environment and install Python packages
+RUN /venv/bin/pip install -U setuptools \
+    && /venv/bin/pip install -U -r requirements.txt
+
+# Use the virtual environment for the CMD
+CMD ["/venv/bin/bash", "start.sh"]
